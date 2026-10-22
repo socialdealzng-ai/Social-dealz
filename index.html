@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#05050a">
+<meta name="description" content="SOCIAL DEALZ - browse deals and listings by category, with prices in naira.">
+<title>SOCIAL DEALZ</title>
+<style>
+:root{
+  --bg:#05050a; --card:#0d0d17; --card2:#12121f; --line:#23233a;
+  --text:#ffffff; --muted:#a9a9c2;
+  --purple:#a855f7; --blue:#38bdf8;
+  --grad:linear-gradient(135deg,#a855f7,#3b82f6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;-webkit-text-size-adjust:100%}
+a{color:inherit;text-decoration:none}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 18px}
+section{padding:56px 0}
+h1,h2,h3{line-height:1.2}
+h2{font-size:1.65rem;margin-bottom:8px}
+.sub{color:var(--muted);margin-bottom:24px}
+.glow-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;border:1px solid transparent;font:inherit;font-weight:600;cursor:pointer;color:#fff;transition:transform .15s,box-shadow .15s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--grad);box-shadow:0 0 18px rgba(168,85,247,.45)}
+.btn-ghost{border-color:var(--purple);background:transparent;box-shadow:0 0 12px rgba(168,85,247,.25) inset}
+.btn-small{min-height:42px;padding:0 16px;font-size:.92rem}
+
+/* Header */
+header{position:sticky;top:0;z-index:50;background:rgba(5,5,10,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-weight:800;letter-spacing:.12em;font-size:1.1rem}
+.menu-btn{background:none;border:1px solid var(--line);color:#fff;width:48px;height:44px;border-radius:12px;font-size:1.3rem;cursor:pointer}
+nav{display:none;position:absolute;left:0;right:0;top:64px;background:#08080f;border-bottom:1px solid var(--line);padding:8px 18px 16px}
+nav.open{display:block}
+nav a{display:block;padding:14px 4px;border-bottom:1px solid var(--line);font-weight:500}
+nav a:last-child{border:none}
+nav a:hover{color:var(--blue)}
+
+/* Hero */
+.hero{padding:64px 0 48px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(168,85,247,.28),transparent 60%),radial-gradient(ellipse at 90% 40%,rgba(56,189,248,.14),transparent 55%)}
+.pill{display:inline-block;border:1px solid var(--purple);color:var(--blue);padding:6px 14px;border-radius:999px;font-size:.8rem;letter-spacing:.08em;margin-bottom:18px;box-shadow:0 0 14px rgba(168,85,247,.35)}
+.hero h1{font-size:2.3rem;margin-bottom:14px}
+.hero p{color:var(--muted);max-width:520px;margin:0 auto 26px}
+.hero .btns{display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto}
+
+/* Search & filters */
+.search{position:relative;margin-bottom:16px}
+.search input{width:100%;height:52px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:#fff;font:inherit;padding:0 16px;outline:none}
+.search input:focus{border-color:var(--purple);box-shadow:0 0 14px rgba(168,85,247,.4)}
+.chips{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;min-height:42px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font:inherit;cursor:pointer}
+.chip.active{color:#fff;border-color:var(--blue);background:rgba(56,189,248,.12);box-shadow:0 0 12px rgba(56,189,248,.4)}
+.tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;color:var(--muted);font-size:.92rem}
+select{background:var(--card);color:#fff;border:1px solid var(--line);border-radius:10px;height:42px;padding:0 10px;font:inherit}
+
+/* Categories */
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 14px;text-align:left;color:#fff;font:inherit;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.cat:hover,.cat:focus-visible{border-color:var(--purple);box-shadow:0 0 16px rgba(168,85,247,.4)}
+.cat .ic{font-size:1.7rem;display:block;margin-bottom:8px}
+.cat b{display:block}
+.cat small{color:var(--muted)}
+
+/* Products */
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:var(--blue);box-shadow:0 0 18px rgba(56,189,248,.25)}
+.thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(59,130,246,.2))}
+.body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tag{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.card h3{font-size:1.05rem}
+.card p{color:var(--muted);font-size:.92rem;flex:1}
+.price{font-size:1.25rem;font-weight:800}
+.sample{font-size:.72rem;color:var(--muted)}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 10px;border:1px dashed var(--line);border-radius:16px}
+.note{margin-top:18px;color:var(--muted);font-size:.85rem}
+
+/* About */
+.about-box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.about-box p{color:var(--muted);margin-bottom:12px}
+.about-box p:last-child{margin:0}
+
+/* FAQ */
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
+summary{cursor:pointer;padding:16px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:10px;min-height:52px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--purple);font-size:1.4rem}
+details[open]{border-color:var(--purple)}
+details[open] summary::after{content:"\2212"}
+details p{padding:0 16px 16px;color:var(--muted)}
+
+/* Contact */
+form{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;display:grid;gap:14px}
+label{font-size:.9rem;color:var(--muted);display:grid;gap:6px}
+input[type=text],textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:#fff;border-radius:12px;padding:12px 14px;font:inherit;outline:none}
+textarea{min-height:130px;resize:vertical}
+input[type=text]:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 12px rgba(56,189,248,.35)}
+.form-btns{display:grid;gap:10px}
+.status{min-height:1.4em;font-size:.9rem;color:var(--blue)}
+
+footer{border-top:1px solid var(--line);padding:28px 0 36px;text-align:center;color:var(--muted);font-size:.88rem}
+footer .brand{display:block;color:#fff;margin-bottom:6px}
+
+@media(min-width:700px){
+  .menu-btn{display:none}
+  nav{display:flex!important;position:static;background:none;border:none;padding:0;gap:22px}
+  nav a{border:none;padding:0}
+  .hero h1{font-size:3.2rem}
+  .hero .btns{flex-direction:row;max-width:none;justify-content:center}
+  .cats{grid-template-columns:repeat(5,1fr)}
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .form-btns{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a href="#home" class="brand glow-text">SOCIAL DEALZ</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav id="nav" aria-label="Main">
+      <a href="#home">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#shop">Listings</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="wrap">
+      <span class="pill">WELCOME TO SOCIAL DEALZ</span>
+      <h1>Find your next <span class="glow-text">great deal</span></h1>
+      <p>Browse SOCIAL DEALZ listings by category, search for what you need, and send us an enquiry in a few taps.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="#shop">Browse Listings</a>
+        <a class="btn btn-ghost" href="#contact">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="categories">
+    <div class="wrap">
+      <h2>Service <span class="glow-text">Categories</span></h2>
+      <p class="sub">Tap a category to see its listings.</p>
+      <div class="cats" id="catGrid"></div>
+    </div>
+  </section>
+
+  <section id="shop">
+    <div class="wrap">
+      <h2>Featured <span class="glow-text">Listings</span></h2>
+      <p class="sub">Search or filter to find what you are looking for.</p>
+      <div class="search">
+        <input type="search" id="searchInput" placeholder="Search listings..." aria-label="Search listings" autocomplete="off">
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+      <div class="tools">
+        <span id="count"></span>
+        <select id="sortSel" aria-label="Sort listings">
+          <option value="default">Sort: Featured</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+        </select>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty">No listings match your search. Try another word or choose "All".</div>
+      <p class="note">These are sample listings for the first version of this website. Names, descriptions and prices will be updated.</p>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <h2>About <span class="glow-text">SOCIAL DEALZ</span></h2>
+      <div class="about-box">
+        <p>SOCIAL DEALZ is a growing online space for browsing deals and listings across different categories, with prices shown in Nigerian naira (&#8358;).</p>
+        <p>This is the first version of our website. More listings and details will be added over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2>Frequently Asked <span class="glow-text">Questions</span></h2>
+      <p class="sub">Quick answers about using this website.</p>
+      <details>
+        <summary>How do I enquire about a listing?</summary>
+        <p>Tap the "Enquire" button on any listing. The contact form will open with the listing name already filled in.</p>
+      </details>
+      <details>
+        <summary>Can I pay on this website?</summary>
+        <p>No. This website does not process payments. It is for browsing listings and sending enquiries only.</p>
+      </details>
+      <details>
+        <summary>Are the listings and prices final?</summary>
+        <p>The listings currently shown are samples and may change. Please confirm details with SOCIAL DEALZ before making any decision.</p>
+      </details>
+      <details>
+        <summary>Do I need an account?</summary>
+        <p>No account or login is needed to browse SOCIAL DEALZ.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2>Contact <span class="glow-text">SOCIAL DEALZ</span></h2>
+      <p class="sub">Write your message below and send it.</p>
+      <form id="contactForm" novalidate>
+        <label>Your name
+          <input type="text" id="cName" placeholder="Enter your name" autocomplete="name">
+        </label>
+        <label>Your message
+          <textarea id="cMsg" placeholder="What would you like to ask?"></textarea>
+        </label>
+        <div class="form-btns">
+          <button type="button" class="btn btn-primary" id="sendWa">Send on WhatsApp</button>
+          <button type="button" class="btn btn-ghost" id="sendMail">Send by Email</button>
+        </div>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="brand glow-text">SOCIAL DEALZ</span>
+    <span>&copy; <span id="year"></span> SOCIAL DEALZ. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+/* ===== SETTINGS: edit these to turn on the contact buttons =====
+   whatsapp: your number with country code, digits only (example format: 234XXXXXXXXXX)
+   email: your business email address
+   Leave a value as "" until you are ready to add it. */
+var CONFIG = {
+  whatsapp: "",
+  email: ""
+};
+
+/* ===== CATEGORIES: edit names and icons here ===== */
+var CATEGORIES = [
+  { name: "Phones & Gadgets", icon: "\uD83D\uDCF1" },
+  { name: "Fashion",          icon: "\uD83D\uDC5F" },
+  { name: "Beauty & Care",    icon: "\u2728" },
+  { name: "Home & Kitchen",   icon: "\uD83C\uDFE0" },
+  { name: "Digital Services", icon: "\uD83D\uDCBB" }
+];
+
+/* ===== SAMPLE LISTINGS: replace with your real listings =====
+   price is a number in naira (no commas). */
+var PRODUCTS = [
+  { id: 1,  name: "Sample Smartphone",        cat: "Phones & Gadgets", price: 185000, icon: "\uD83D\uDCF1", desc: "Sample listing. Replace with your real phone details." },
+  { id: 2,  name: "Sample Wireless Earbuds",  cat: "Phones & Gadgets", price: 18500,  icon: "\uD83C\uDFA7", desc: "Sample listing. Replace with your real product details." },
+  { id: 3,  name: "Sample Power Bank",        cat: "Phones & Gadgets", price: 12000,  icon: "\uD83D\uDD0B", desc: "Sample listing. Replace with your real product details." },
+  { id: 4,  name: "Sample Sneakers",          cat: "Fashion",          price: 32000,  icon: "\uD83D\uDC5F", desc: "Sample listing. Replace with your real fashion item." },
+  { id: 5,  name: "Sample Ankara Outfit",     cat: "Fashion",          price: 28000,  icon: "\uD83D\uDC57", desc: "Sample listing. Replace with your real fashion item." },
+  { id: 6,  name: "Sample Skincare Set",      cat: "Beauty & Care",    price: 15500,  icon: "\u2728",       desc: "Sample listing. Replace with your real beauty product." },
+  { id: 7,  name: "Sample Hair Care Bundle",  cat: "Beauty & Care",    price: 9500,   icon: "\uD83D\uDC87", desc: "Sample listing. Replace with your real beauty product." },
+  { id: 8,  name: "Sample Blender",           cat: "Home & Kitchen",   price: 22000,  icon: "\uD83C\uDF79", desc: "Sample listing. Replace with your real home product." },
+  { id: 9,  name: "Sample Cookware Set",      cat: "Home & Kitchen",   price: 45000,  icon: "\uD83C\uDF73", desc: "Sample listing. Replace with your real home product." },
+  { id: 10, name: "Sample Logo Design",       cat: "Digital Services", price: 20000,  icon: "\uD83C\uDFA8", desc: "Sample service. Replace with your real service details." },
+  { id: 11, name: "Sample Social Media Setup",cat: "Digital Services", price: 35000,  icon: "\uD83D\uDCF2", desc: "Sample service. Replace with your real service details." }
+];
+
+var state = { cat: "All", q: "", sort: "default" };
+
+function naira(n){ return "\u20A6" + Number(n).toLocaleString("en-NG"); }
+function $(id){ return document.getElementById(id); }
+
+function countIn(cat){
+  return PRODUCTS.filter(function(p){ return p.cat === cat; }).length;
+}
+
+function buildCategories(){
+  var grid = $("catGrid"), chips = $("chips");
+  CATEGORIES.forEach(function(c){
+    var b = document.createElement("button");
+    b.className = "cat"; b.type = "button";
+    var ic = document.createElement("span"); ic.className = "ic"; ic.textContent = c.icon;
+    var t = document.createElement("b"); t.textContent = c.name;
+    var s = document.createElement("small"); s.textContent = countIn(c.name) + " listings";
+    b.appendChild(ic); b.appendChild(t); b.appendChild(s);
+    b.addEventListener("click", function(){
+      setCategory(c.name);
+      $("shop").scrollIntoView({ behavior: "smooth" });
+    });
+    grid.appendChild(b);
+  });
+  ["All"].concat(CATEGORIES.map(function(c){ return c.name; })).forEach(function(name){
+    var ch = document.createElement("button");
+    ch.type = "button"; ch.className = "chip"; ch.textContent = name;
+    ch.setAttribute("data-cat", name);
+    ch.addEventListener("click", function(){ setCategory(name); });
+    chips.appendChild(ch);
+  });
+}
+
+function setCategory(name){
+  state.cat = name;
+  render();
+}
+
+function render(){
+  var q = state.q.trim().toLowerCase();
+  var list = PRODUCTS.filter(function(p){
+    var inCat = state.cat === "All" || p.cat === state.cat;
+    var inText = !q || (p.name + " " + p.cat + " " + p.desc).toLowerCase().indexOf(q) !== -1;
+    return inCat && inText;
+  });
+  if (state.sort === "low") list.sort(function(a,b){ return a.price - b.price; });
+  if (state.sort === "high") list.sort(function(a,b){ return b.price - a.price; });
+
+  document.querySelectorAll(".chip").forEach(function(ch){
+    ch.classList.toggle("active", ch.getAttribute("data-cat") === state.cat);
+  });
+
+  var grid = $("grid");
+  grid.innerHTML = "";
+  list.forEach(function(p){
+    var card = document.createElement("article"); card.className = "card";
+    var th = document.createElement("div"); th.className = "thumb"; th.textContent = p.icon;
+    var body = document.createElement("div"); body.className = "body";
+    var tag = document.createElement("span"); tag.className = "tag"; tag.textContent = p.cat;
+    var h = document.createElement("h3"); h.textContent = p.name;
+    var d = document.createElement("p"); d.textContent = p.desc;
+    var pr = document.createElement("div"); pr.className = "price"; pr.textContent = naira(p.price);
+    var btn = document.createElement("button"); btn.type = "button"; btn.className = "btn btn-primary btn-small"; btn.textContent = "Enquire";
+    btn.addEventListener("click", function(){ enquire(p); });
+    body.appendChild(tag); body.appendChild(h); body.appendChild(d); body.appendChild(pr); body.appendChild(btn);
+    card.appendChild(th); card.appendChild(body);
+    grid.appendChild(card);
+  });
+
+  $("count").textContent = list.length + (list.length === 1 ? " listing" : " listings");
+  $("empty").style.display = list.length ? "none" : "block";
+}
+
+function enquire(p){
+  $("cMsg").value = "Hello SOCIAL DEALZ, I would like to enquire about: " + p.name + " (" + naira(p.price) + ").";
+  $("status").textContent = "";
+  $("contact").scrollIntoView({ behavior: "smooth" });
+  $("cMsg").focus({ preventScroll: true });
+}
+
+function composeMessage(){
+  var name = $("cName").value.trim();
+  var msg = $("cMsg").value.trim();
+  if (!msg){ $("status").textContent = "Please write a message first."; return null; }
+  return (name ? "From: " + name + "\n" : "") + msg;
+}
+
+$("sendWa").addEventListener("click", function(){
+  var text = composeMessage(); if (text === null) return;
+  var num = CONFIG.whatsapp.replace(/\D/g, "");
+  if (!num){ $("status").textContent = "WhatsApp contact has not been set up yet."; return; }
+  window.open("https://wa.me/" + num + "?text=" + encodeURIComponent(text), "_blank");
+  $("status").textContent = "Opening WhatsApp...";
+});
+
+$("sendMail").addEventListener("click", function(){
+  var text = composeMessage(); if (text === null) return;
+  if (!CONFIG.email){ $("status").textContent = "Email contact has not been set up yet."; return; }
+  window.location.href = "mailto:" + CONFIG.email + "?subject=" + encodeURIComponent("SOCIAL DEALZ enquiry") + "&body=" + encodeURIComponent(text);
+  $("status").textContent = "Opening your email app...";
+});
+
+$("contactForm").addEventListener("submit", function(e){ e.preventDefault(); });
+
+$("searchInput").addEventListener("input", function(e){ state.q = e.target.value; render(); });
+$("sortSel").addEventListener("change", function(e){ state.sort = e.target.value; render(); });
+
+var nav = $("nav"), menuBtn = $("menuBtn");
+menuBtn.addEventListener("click", function(){
+  var open = nav.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+});
+nav.addEventListener("click", function(e){
+  if (e.target.tagName === "A"){
+    nav.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded", "false");
+  }
+});
+
+$("year").textContent = new Date().getFullYear();
+buildCategories();
+render();
+</script>
+</body>
+</html>
